@@ -72,19 +72,24 @@
 
 <body>
     <div class="container">
+
         <div class="brand">Somos 1</div>
         <div class="subtitle">Gestão de Ministérios</div>
 
         <h1>Gestão de Voluntários</h1>
+
         <div class="description">
             Gerencie os voluntários e suas funções no ministério.
         </div>
 
         <?php if (! empty($volunteers)): ?>
+
             <table>
                 <thead>
                     <tr>
                         <th>NOME</th>
+                        <th>MINISTÉRIO</th>
+                        <th>FUNÇÕES</th>
                         <th>E-MAIL</th>
                         <th>TELEFONE</th>
                         <th>STATUS</th>
@@ -92,25 +97,72 @@
                 </thead>
 
                 <tbody>
+
                     <?php foreach ($volunteers as $volunteer): ?>
+
                         <tr>
-                            <td><?= esc($volunteer['name']) ?></td>
-                            <td><?= esc($volunteer['email']) ?></td>
-                            <td><?= esc($volunteer['phone'] ?? '-') ?></td>
+
+                            <td>
+                                <?= esc($volunteer['name']) ?>
+                            </td>
+
+                            <td>
+                                <?= esc($volunteer['ministry']['name'] ?? '-') ?>
+                            </td>
+
+                            <td>
+                                <?php if (! empty($volunteer['functions'])): ?>
+
+                                    <?= esc(
+                                        implode(
+                                            ', ',
+                                            array_column(
+                                                $volunteer['functions'],
+                                                'name'
+                                            )
+                                        )
+                                    ) ?>
+
+                                <?php else: ?>
+
+                                    -
+
+                                <?php endif ?>
+                            </td>
+
+                            <td>
+                                <?= esc($volunteer['email']) ?>
+                            </td>
+
+                            <td>
+                                <?= esc($volunteer['phone'] ?? '-') ?>
+                            </td>
+
                             <td>
                                 <span class="status">
-                                    <?= $volunteer['status'] === 'ACTIVE' ? 'Ativo' : 'Inativo' ?>
+
+                                    <?= $volunteer['status'] === 'ACTIVE'
+                                        ? 'Ativo'
+                                        : 'Inativo' ?>
+
                                 </span>
                             </td>
+
                         </tr>
+
                     <?php endforeach ?>
+
                 </tbody>
             </table>
+
         <?php else: ?>
+
             <div class="empty">
                 Nenhum voluntário encontrado.
             </div>
+
         <?php endif ?>
+
     </div>
 </body>
 </html>
