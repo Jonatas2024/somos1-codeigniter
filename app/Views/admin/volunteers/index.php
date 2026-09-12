@@ -27,13 +27,31 @@
             margin-bottom: 30px;
         }
 
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
         h1 {
-            margin-bottom: 8px;
+            margin: 0 0 8px 0;
         }
 
         .description {
             color: #9ca3af;
-            margin-bottom: 24px;
+        }
+
+        .new-button {
+            display: inline-block;
+            background: #2563eb;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            white-space: nowrap;
         }
 
         table {
@@ -44,7 +62,8 @@
             overflow: hidden;
         }
 
-        th, td {
+        th,
+        td {
             padding: 16px;
             text-align: left;
             border-bottom: 1px solid #374151;
@@ -67,6 +86,14 @@
             padding: 20px;
             color: #9ca3af;
         }
+
+        .alert-success {
+            background: #065f46;
+            color: #ffffff;
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 
@@ -76,11 +103,30 @@
         <div class="brand">Somos 1</div>
         <div class="subtitle">Gestão de Ministérios</div>
 
-        <h1>Gestão de Voluntários</h1>
+        <div class="header-row">
 
-        <div class="description">
-            Gerencie os voluntários e suas funções no ministério.
+            <div>
+                <h1>Gestão de Voluntários</h1>
+
+                <div class="description">
+                    Gerencie os voluntários e suas funções no ministério.
+                </div>
+            </div>
+
+            <a
+                href="<?= site_url('admin/volunteers/new') ?>"
+                class="new-button"
+            >
+                + Novo voluntário
+            </a>
+
         </div>
+
+        <?php if (session()->getFlashdata('success')): ?>
+            <div class="alert-success">
+                <?= esc(session()->getFlashdata('success')) ?>
+            </div>
+        <?php endif ?>
 
         <?php if (! empty($volunteers)): ?>
 
@@ -140,11 +186,9 @@
 
                             <td>
                                 <span class="status">
-
                                     <?= $volunteer['status'] === 'ACTIVE'
                                         ? 'Ativo'
                                         : 'Inativo' ?>
-
                                 </span>
                             </td>
 
