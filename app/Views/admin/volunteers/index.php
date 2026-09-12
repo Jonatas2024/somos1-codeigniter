@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Voluntários - Somos 1</title>
 
     <style>
@@ -82,6 +83,10 @@
             font-size: 12px;
         }
 
+        .status.inactive {
+            background: #7f1d1d;
+        }
+
         .empty {
             padding: 20px;
             color: #9ca3af;
@@ -94,119 +99,189 @@
             border-radius: 8px;
             margin-bottom: 20px;
         }
+
+        .edit-button {
+            display: inline-block;
+            background: #374151;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 7px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .edit-button:hover {
+            background: #4b5563;
+        }
     </style>
 </head>
 
 <body>
-    <div class="container">
 
-        <div class="brand">Somos 1</div>
-        <div class="subtitle">Gestão de Ministérios</div>
+<div class="container">
 
-        <div class="header-row">
+    <div class="brand">
+        Somos 1
+    </div>
 
-            <div>
-                <h1>Gestão de Voluntários</h1>
+    <div class="subtitle">
+        Gestão de Ministérios
+    </div>
 
-                <div class="description">
-                    Gerencie os voluntários e suas funções no ministério.
-                </div>
+    <div class="header-row">
+
+        <div>
+
+            <h1>
+                Gestão de Voluntários
+            </h1>
+
+            <div class="description">
+                Gerencie os voluntários e suas funções no ministério.
             </div>
-
-            <a
-                href="<?= site_url('admin/volunteers/new') ?>"
-                class="new-button"
-            >
-                + Novo voluntário
-            </a>
 
         </div>
 
-        <?php if (session()->getFlashdata('success')): ?>
-            <div class="alert-success">
-                <?= esc(session()->getFlashdata('success')) ?>
-            </div>
-        <?php endif ?>
-
-        <?php if (! empty($volunteers)): ?>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>NOME</th>
-                        <th>MINISTÉRIO</th>
-                        <th>FUNÇÕES</th>
-                        <th>E-MAIL</th>
-                        <th>TELEFONE</th>
-                        <th>STATUS</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    <?php foreach ($volunteers as $volunteer): ?>
-
-                        <tr>
-
-                            <td>
-                                <?= esc($volunteer['name']) ?>
-                            </td>
-
-                            <td>
-                                <?= esc($volunteer['ministry']['name'] ?? '-') ?>
-                            </td>
-
-                            <td>
-                                <?php if (! empty($volunteer['functions'])): ?>
-
-                                    <?= esc(
-                                        implode(
-                                            ', ',
-                                            array_column(
-                                                $volunteer['functions'],
-                                                'name'
-                                            )
-                                        )
-                                    ) ?>
-
-                                <?php else: ?>
-
-                                    -
-
-                                <?php endif ?>
-                            </td>
-
-                            <td>
-                                <?= esc($volunteer['email']) ?>
-                            </td>
-
-                            <td>
-                                <?= esc($volunteer['phone'] ?? '-') ?>
-                            </td>
-
-                            <td>
-                                <span class="status">
-                                    <?= $volunteer['status'] === 'ACTIVE'
-                                        ? 'Ativo'
-                                        : 'Inativo' ?>
-                                </span>
-                            </td>
-
-                        </tr>
-
-                    <?php endforeach ?>
-
-                </tbody>
-            </table>
-
-        <?php else: ?>
-
-            <div class="empty">
-                Nenhum voluntário encontrado.
-            </div>
-
-        <?php endif ?>
+        <a
+            href="<?= site_url('admin/volunteers/new') ?>"
+            class="new-button"
+        >
+            + Novo voluntário
+        </a>
 
     </div>
+
+    <?php if (session()->getFlashdata('success')): ?>
+
+        <div class="alert-success">
+            <?= esc(session()->getFlashdata('success')) ?>
+        </div>
+
+    <?php endif ?>
+
+    <?php if (! empty($volunteers)): ?>
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>NOME</th>
+                    <th>MINISTÉRIO</th>
+                    <th>FUNÇÕES</th>
+                    <th>E-MAIL</th>
+                    <th>TELEFONE</th>
+                    <th>STATUS</th>
+                    <th>AÇÕES</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            <?php foreach ($volunteers as $volunteer): ?>
+
+                <tr>
+
+                    <td>
+                        <?= esc($volunteer['name']) ?>
+                    </td>
+
+                    <td>
+
+                        <?php if (! empty($volunteer['ministry'])): ?>
+
+                            <?= esc(
+                                $volunteer['ministry']['name']
+                            ) ?>
+
+                        <?php else: ?>
+
+                            -
+
+                        <?php endif ?>
+
+                    </td>
+
+                    <td>
+
+                        <?php if (! empty($volunteer['functions'])): ?>
+
+                            <?= esc(
+                                implode(
+                                    ', ',
+                                    array_column(
+                                        $volunteer['functions'],
+                                        'name'
+                                    )
+                                )
+                            ) ?>
+
+                        <?php else: ?>
+
+                            -
+
+                        <?php endif ?>
+
+                    </td>
+
+                    <td>
+                        <?= esc($volunteer['email']) ?>
+                    </td>
+
+                    <td>
+                        <?= esc($volunteer['phone'] ?? '-') ?>
+                    </td>
+
+                    <td>
+
+                        <span
+                            class="status <?= 
+                                $volunteer['status'] === 'ACTIVE'
+                                    ? ''
+                                    : 'inactive'
+                            ?>"
+                        >
+
+                            <?= 
+                                $volunteer['status'] === 'ACTIVE'
+                                    ? 'Ativo'
+                                    : 'Inativo'
+                            ?>
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <a
+                            href="<?= site_url('admin/volunteers/edit') ?>?id=<?= urlencode($volunteer['id']) ?>"
+                            class="edit-button"
+                        >
+                            Editar
+                        </a>
+
+                    </td>
+
+                </tr>
+
+            <?php endforeach ?>
+
+            </tbody>
+
+        </table>
+
+    <?php else: ?>
+
+        <div class="empty">
+            Nenhum voluntário encontrado.
+        </div>
+
+    <?php endif ?>
+
+</div>
+
 </body>
 </html>
