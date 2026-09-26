@@ -10,6 +10,8 @@ use App\Models\UserFunctionModel;
 
 class Volunteers extends BaseController
 {
+    protected $helpers = ['url'];
+
     public function index()
     {
         $userModel = new UserModel();
@@ -284,6 +286,46 @@ class Volunteers extends BaseController
         return redirect()
             ->to(site_url('admin/volunteers'))
             ->with('success', 'Voluntário atualizado com sucesso.');
+    }
+
+    public function toggleStatus($id = null)
+    {
+        $id = $id ?? $this->request->getPost('id');
+        $id = trim((string) $id);
+
+        if ($id === '') {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound(
+                'Voluntário não informado.'
+            );
+        }
+
+        $userModel = new UserModel();
+
+        $volunteer = $userModel
+            ->where('id', $id)
+            ->first();
+
+        if (! $volunteer) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound(
+                'Voluntário não encontrado.'
+            );
+        }
+
+        $newStatus = ($volunteer['status'] === 'ACTIVE') ? 'INACTIVE' : 'ACTIVE';
+        $now = date('Y-m-d H:i:s');
+
+        $userModel->update($id, [
+            'status'    => $newStatus,
+            'updatedAt' => $now,
+        ]);
+
+        $message = ($newStatus === 'ACTIVE')
+            ? 'Voluntário ativado com sucesso.'
+            : 'Voluntário desativado com sucesso.';
+
+        return redirect()
+            ->to(site_url('admin/volunteers'))
+            ->with('success', $message);
     }
 
     private function generateUuid(): string

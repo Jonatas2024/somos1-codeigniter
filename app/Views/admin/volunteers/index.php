@@ -100,6 +100,12 @@
             margin-bottom: 20px;
         }
 
+        .actions-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         .edit-button {
             display: inline-block;
             background: #374151;
@@ -109,10 +115,42 @@
             border-radius: 7px;
             font-size: 13px;
             font-weight: bold;
+            line-height: normal;
         }
 
         .edit-button:hover {
             background: #4b5563;
+        }
+
+        .btn-action {
+            display: inline-block;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 7px;
+            font-size: 13px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            line-height: normal;
+            transition: background-color 0.2s;
+        }
+
+        .btn-toggle-deactivate {
+            background: #7f1d1d;
+        }
+
+        .btn-toggle-deactivate:hover {
+            background: #991b1b;
+        }
+
+        .btn-toggle-activate {
+            background: #065f46;
+        }
+
+        .btn-toggle-activate:hover {
+            background: #047857;
         }
     </style>
 </head>
@@ -254,7 +292,7 @@
 
                     </td>
 
-                    <td>
+                    <td class="actions-cell">
 
                         <a
                             href="<?= site_url('admin/volunteers/edit') ?>?id=<?= urlencode($volunteer['id']) ?>"
@@ -262,6 +300,29 @@
                         >
                             Editar
                         </a>
+
+                        <form
+                            method="post"
+                            action="<?= site_url('admin/volunteers/' . urlencode($volunteer['id']) . '/toggle-status') ?>"
+                            style="margin: 0; display: inline;"
+                        >
+                            <?php if ($volunteer['status'] === 'ACTIVE'): ?>
+                                <button
+                                    type="submit"
+                                    class="btn-action btn-toggle-deactivate"
+                                    onclick="return confirm('Deseja realmente desativar este voluntário?');"
+                                >
+                                    Desativar
+                                </button>
+                            <?php else: ?>
+                                <button
+                                    type="submit"
+                                    class="btn-action btn-toggle-activate"
+                                >
+                                    Ativar
+                                </button>
+                            <?php endif ?>
+                        </form>
 
                     </td>
 

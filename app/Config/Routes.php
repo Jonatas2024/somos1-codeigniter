@@ -54,3 +54,9 @@ $routes->post(
     'admin/volunteers/(:segment)',
     'Admin\Volunteers::update/$1'
 );
+
+// Alternar status do voluntário (Ativar / Desativar)
+$routes->post(
+    'admin/volunteers/(:segment)/toggle-status',
+    'Admin\Volunteers::toggleStatus/$1'
+);
